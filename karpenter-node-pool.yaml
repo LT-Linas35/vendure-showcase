@@ -15,6 +15,7 @@ spec:
         karpenter.sh/discovery: Vendure-Cluster
   tags:
     karpenter.sh/discovery: Vendure-Cluster
+
 ---
 apiVersion: karpenter.sh/v1
 kind: NodePool
@@ -40,6 +41,9 @@ spec:
         - key: "karpenter.k8s.aws/instance-generation"
           operator: Gt
           values: ["2"]
+        - key: "kubernetes.io/arch"
+          operator: In
+          values: ["amd64"]
   limits:
     cpu: 32
   disruption:
