@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bandymas
+spec:
+  containers:
+  - name: verdaccio
+    image: verdaccio/verdaccio
+    ports:
+    - containerPort: 4873
+    resources:
+      requests:
+        cpu: "500m"
+      limits:
+        cpu: "1"
+  - name: shell
+    image: node
+    command: ["sleep"]
+    args: ["infinity"]
+    securityContext:
+      runAsUser: 1000
+    resources:
+      requests:
+        cpu: "1000m"
+      limits:
+        cpu: "2"
