@@ -41,7 +41,7 @@ spec:
           operator: Gt
           values: ["2"]
   limits:
-    cpu: 30
+    cpu: 32
   disruption:
     consolidationPolicy: WhenEmpty
     consolidateAfter: 30s

@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: verdaccio-config
+  namespace: jenkins
+data:
+  config.yaml: |
+    storage: /verdaccio/storage/data
+    plugins: /verdaccio/plugins
+    web:
+      title: Verdaccio
+    auth:
+      htpasswd:
+        file: /verdaccio/storage/htpasswd
+    uplinks: {}
+    packages:
+      '@*/*':
+        access: $all
+        publish: $anonymous
+        unpublish: $authenticated
+        proxy: npmjs
+      '**':
+        access: $all
+        publish: $anonymous
+        unpublish: $authenticated
+        proxy: npmjs
+    server:
+      keepAliveTimeout: 60
+    middlewares:
+      audit:
+        enabled: true
+    log: { type: stdout, format: pretty, level: http }

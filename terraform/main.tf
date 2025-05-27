@@ -7,12 +7,13 @@ module "vpc" {
   cidr                    = "10.0.0.0/16"
   map_public_ip_on_launch = true
 
-  azs             = ["eu-west-2a", "eu-west-2b", "eu-west-2c"]
+  azs = ["eu-west-2a", "eu-west-2b", "eu-west-2c"]
+
   private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+  public_subnets  = ["10.0.10.0/24", "10.0.20.0/24", "10.0.30.0/24"]
 
   enable_nat_gateway = true
-  enable_vpn_gateway = true
+  #  enable_vpn_gateway = true
 
   tags = {
     Terraform                = "true"
@@ -20,6 +21,7 @@ module "vpc" {
     "karpenter.sh/discovery" = "Vendure-Cluster"
   }
 }
+
 ##############################################################################################################################
 
 module "eks" {
@@ -49,7 +51,9 @@ module "eks" {
     eks-pod-identity-agent = {}
     kube-proxy             = {}
     vpc-cni                = {}
-    aws-ebs-csi-driver     = {}
+    aws-ebs-csi-driver     = {
+      service_account_role_arn = "arn:aws:iam::975050322104:role/AmazonEKSPodIdentityAmazonEBSCSIDriverRole"
+    }
   }
   # Optional
   cluster_endpoint_public_access = true
@@ -101,7 +105,7 @@ module "karpenter" {
   node_iam_role_use_name_prefix   = false
   node_iam_role_name              = "Vendure-Cluster"
   create_pod_identity_association = true
-  enable_v1_permissions = true
+  enable_v1_permissions           = true
 
 
   # Attach additional IAM policies to the Karpenter node IAM role
