@@ -11,7 +11,7 @@ spec:
       command: ["sleep"]
       args: ["infinity"]
       securityContext:
-        privileged: true
+        privileged: false
 #      resources:
 #        requests:
 #          cpu: "1000m"

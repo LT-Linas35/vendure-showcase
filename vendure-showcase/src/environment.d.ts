@@ -18,6 +18,7 @@ declare global {
             DB_SCHEMA: string;
             DB_CA_CERT: string;
             synchronize: boolean;
+            HOST_NAME: string;
         }
     }
 }

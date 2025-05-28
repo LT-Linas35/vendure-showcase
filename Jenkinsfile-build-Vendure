@@ -17,7 +17,7 @@ spec:
         privileged: true
       resources:
         requests:
-          cpu: "1000m"
+          cpu: "6000m"
         limits:
           cpu: "7"
     - name: verdaccio
@@ -26,7 +26,7 @@ spec:
         - containerPort: 4873
       resources:
         requests:
-          cpu: "500m"
+          cpu: "1000m"
         limits:
           cpu: "1"
       volumeMounts:
@@ -55,6 +55,7 @@ spec:
             steps {
               dir('vendure-source') {
                 sh 'npm install --production'
+                sh 'npm install lerna'
                 sh 'apt update && apt install -y buildah'
             } 
           }

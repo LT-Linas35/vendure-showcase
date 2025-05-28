@@ -15,6 +15,12 @@ spec:
       containers:
         - name: server
           image: linas37/vendure-showcase:latest
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: "1000m"
+            limits:
+              cpu: "1"
           command:
             - node
           args:
@@ -40,6 +46,8 @@ spec:
               value: "dev" 
             - name: synchronize
               value: "false"
+            - name: HOST_NAME
+              value: "0.0.0.0"
             - name: DB_CA_CERT
               valueFrom:
                 configMapKeyRef:
@@ -50,6 +58,11 @@ spec:
         - name: worker
           image: linas37/vendure-showcase:latest
           imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: "1000m"
+            limits:
+              cpu: "1"
           command:
             - node
           args:
@@ -75,6 +88,8 @@ spec:
               value: "dev" 
             - name: synchronize
               value: "false"
+            - name: HOST_NAME
+              value: "0.0.0.0"
             - name: DB_CA_CERT
               valueFrom:
                 configMapKeyRef:
