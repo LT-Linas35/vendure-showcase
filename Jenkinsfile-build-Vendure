@@ -118,10 +118,9 @@ spec:
 
         stage('Build & Push') {
             steps {
-                dir('vendure-source/packages/create') {
+                dir('vendure-showcase') {
                 sh '''
                     npm run build
-                    sh 'npx $PWD populate-db --ci'
                     buildah bud -t linas37/vendure-showcase:latest .
                     buildah push linas37/vendure-showcase:latest
                 '''

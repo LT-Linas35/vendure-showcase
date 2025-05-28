@@ -17,6 +17,7 @@ declare global {
             DB_PASSWORD: string;
             DB_SCHEMA: string;
             DB_CA_CERT: string;
+            synchronize: boolean;
         }
     }
 }
