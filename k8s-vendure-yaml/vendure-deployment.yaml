@@ -25,7 +25,7 @@ spec:
             - name: COOKIE_SECRET
               value: "HvW6FEfJmVwO46uJhQiFXA"               
             - name: DB_HOST
-              value: "vendure.cv6woyeie4gv.us-east-1.rds.amazonaws.com"
+              value: "db.vendure.linasm.click"
             - name: DB_PORT
               value: "5432"
             - name: DB_NAME
@@ -60,7 +60,7 @@ spec:
             - name: COOKIE_SECRET
               value: "HvW6FEfJmVwO46uJhQiFXA"               
             - name: DB_HOST
-              value: "vendure.cv6woyeie4gv.us-east-1.rds.amazonaws.com"
+              value: "db.vendure.linasm.click"
             - name: DB_PORT
               value: "5432"
             - name: DB_NAME
@@ -107,3 +107,16 @@ data:
     YiZAbSRRZG+Li23cmPWrbA1CJY121SB+WybCbysbOXzhD3Sl2KSZRwSw4p2HrFtV1Prk0dOBtZxC
     G9luf87ultuDZpfS0w6oNBAMXocgswk24ylcADkkFxBWW+7BETn1EpK+t1Lm37mU4sxtuha00XAi
     -----END CERTIFICATE-----
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: vendure-shop
+spec:
+  selector:
+    app: vendure-shop
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: LoadBalancer

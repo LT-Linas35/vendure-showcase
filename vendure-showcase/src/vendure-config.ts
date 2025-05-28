@@ -17,6 +17,7 @@ const serverPort = +process.env.PORT || 3000;
 
 export const config: VendureConfig = {
     apiOptions: {
+        hostname: 'api.vendure.linasm.click',
         port: serverPort,
         adminApiPath: 'admin-api',
         shopApiPath: 'shop-api',

@@ -12,11 +12,11 @@ spec:
       args: ["infinity"]
       securityContext:
         privileged: true
-      resources:
-        requests:
-          cpu: "1000m"
-        limits:
-          cpu: "1"
+#      resources:
+#        requests:
+#          cpu: "1000m"
+#        limits:
+#          cpu: "1"
 '''
             defaultContainer 'shell'
             retries 2
@@ -32,8 +32,9 @@ spec:
         } 
         stage('Populate Vendure DB') {
             steps {
-                dir('vendure-source/packages/create') {
-                    sh 'npx $PWD populate-db --ci'
+                dir('vendure-showcase') {
+                    sh 'npm run build'
+                    sh 'npm run start:server'
                 }
             }
         } 

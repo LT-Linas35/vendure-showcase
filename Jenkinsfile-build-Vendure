@@ -120,6 +120,7 @@ spec:
             steps {
                 dir('vendure-showcase') {
                 sh '''
+                    npm install --production
                     npm run build
                     buildah bud -t linas37/vendure-showcase:latest .
                     buildah push linas37/vendure-showcase:latest
