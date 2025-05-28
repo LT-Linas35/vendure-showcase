@@ -38,6 +38,8 @@ spec:
               value: "public"
             - name: APP_ENV
               value: "dev" 
+            - name: synchronize
+              value: "false"
             - name: DB_CA_CERT
               valueFrom:
                 configMapKeyRef:
@@ -71,6 +73,8 @@ spec:
               value: "public"
             - name: APP_ENV
               value: "dev" 
+            - name: synchronize
+              value: "false"
             - name: DB_CA_CERT
               valueFrom:
                 configMapKeyRef:
