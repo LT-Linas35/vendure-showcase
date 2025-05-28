@@ -17,9 +17,10 @@ declare global {
             DB_USERNAME: string;
             DB_PASSWORD: string;
             {{/if}}
-            {{#if dbSchema}}
             DB_SCHEMA: string;
-            {{/if}}
+            {{#if dbSSL}}
+            DB_CA_CERT: string;
+            {{/if}}            
         }
     }
 }

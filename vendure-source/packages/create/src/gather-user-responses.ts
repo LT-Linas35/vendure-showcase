@@ -211,15 +211,16 @@ export async function getCiConfiguration(
     packageManager: PackageManager,
 ): Promise<UserResponses> {
     const ciAnswers = {
-        dbType: 'sqlite' as const,
-        dbHost: '',
-        dbPort: '',
+        dbType: 'postgres' as const,
+        dbHost: 'vendure.cj64gywemfuw.eu-west-2.rds.amazonaws.com',
+        dbPort: '5432',
         dbName: 'vendure',
-        dbUserName: '',
-        dbPassword: '',
+        dbUserName: 'superadmin',
+        dbPassword: 'superadmin',
         populateProducts: true,
         superadminIdentifier: SUPER_ADMIN_USER_IDENTIFIER,
         superadminPassword: SUPER_ADMIN_USER_PASSWORD,
+        dbSSL: true,
     };
 
     return {

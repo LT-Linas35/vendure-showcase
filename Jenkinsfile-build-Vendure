@@ -10,7 +10,7 @@ kind: Pod
 spec:
   containers:
     - name: shell
-      image: linas37/vendure-build-devtools:latest
+      image: node:latest
       command: ["sleep"]
       args: ["infinity"]
       securityContext:
@@ -19,13 +19,11 @@ spec:
         requests:
           cpu: "1000m"
         limits:
-          cpu: "3"
+          cpu: "7"
     - name: verdaccio
       image: verdaccio/verdaccio
       ports:
         - containerPort: 4873
-      securityContext:
-        runAsUser: 1000
       resources:
         requests:
           cpu: "500m"
@@ -56,7 +54,7 @@ spec:
         stage('Installing dependencies') {
             steps {
               dir('vendure-source') {
-                sh 'npm install'
+                sh 'npm install --production'
                 sh 'apt update && apt install -y buildah'
             } 
           }
@@ -79,8 +77,8 @@ spec:
 */
         stage('Configuring NPM Registry') {
             steps {
-              sh 'yes none | npm login --registry ${env.NPM_REGISTRY}'
-              sh 'npm config set @vendure:registry ${env.NPM_REGISTRY}'
+              sh """npm config set //localhost:4873/:_authToken=none"""
+              sh """npm config set @vendure:registry ${env.NPM_REGISTRY}"""
             }
         }
         stage('Publish NPM Packages') {
@@ -108,14 +106,11 @@ spec:
         
         stage('Login to Docker Hub') {
             steps {
-              dir('vendure-showcase') {
                 script {
                   withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                       sh '''
                           buildah login --username $DOCKER_USER --password $DOCKER_PASS docker.io
                       '''
-                }
-
                 }
             }
         }
@@ -123,10 +118,12 @@ spec:
 
         stage('Build & Push') {
             steps {
-                dir('vendure-showcase') {
+                dir('vendure-source/packages/create') {
                 sh '''
-                    buildah bud -t docker.io/linas37/vendure-showcase:latest .
-                    buildah push docker.io/linas37/vendure-showcase:latest
+                    npm run build
+                    sh 'npx $PWD populate-db --ci'
+                    buildah bud -t linas37/vendure-showcase:latest .
+                    buildah push linas37/vendure-showcase:latest
                 '''
                 }
 

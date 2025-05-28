@@ -46,11 +46,11 @@ export const config: VendureConfig = {
         migrations: [path.join(__dirname, './migrations/*.+(js|ts)')],
         logging: false,
         database: {{#if isSQLjs}}new Uint8Array([]){{else if isSQLite}}path.join(__dirname, '../vendure.sqlite'){{else}}process.env.DB_NAME{{/if}},
-        {{#if dbSchema}}
         schema: process.env.DB_SCHEMA,
-        {{/if}}
         {{#if dbSSL}}
-        ssl: true,
+        ssl: process.env.DB_CA_CERT ? {
+          ca: process.env.DB_CA_CERT,
+        } : undefined,
         {{/if}}
         {{#if isSQLjs}}
         location: path.join(__dirname, 'vendure.sqlite'),

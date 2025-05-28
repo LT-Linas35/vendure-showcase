@@ -11,6 +11,7 @@ module "vpc" {
 
   private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
   public_subnets  = ["10.0.10.0/24", "10.0.20.0/24", "10.0.30.0/24"]
+  database_subnets = ["10.0.11.0/24", "10.0.22.0/24", "10.0.33.0/24"]
 
   enable_nat_gateway = true
   #  enable_vpn_gateway = true
@@ -62,8 +63,8 @@ module "eks" {
   enable_cluster_creator_admin_permissions = true
 
   vpc_id                   = module.vpc.vpc_id
-  subnet_ids               = [module.vpc.public_subnets[0], module.vpc.public_subnets[1], module.vpc.public_subnets[2]]
-  control_plane_subnet_ids = [module.vpc.private_subnets[0], module.vpc.private_subnets[1], module.vpc.private_subnets[2]]
+  subnet_ids               = [module.vpc.private_subnets[0], module.vpc.private_subnets[1], module.vpc.private_subnets[2]]
+  control_plane_subnet_ids = [module.vpc.public_subnets[0], module.vpc.public_subnets[1], module.vpc.public_subnets[2]]
 
   # EKS Managed Node Group(s)
   eks_managed_node_group_defaults = {

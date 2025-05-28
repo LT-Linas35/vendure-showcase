@@ -1,0 +1,43 @@
+pipeline {
+    agent {
+        kubernetes {
+            yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+    - name: shell
+      image: node:latest
+      command: ["sleep"]
+      args: ["infinity"]
+      securityContext:
+        privileged: true
+      resources:
+        requests:
+          cpu: "1000m"
+        limits:
+          cpu: "1"
+'''
+            defaultContainer 'shell'
+            retries 2
+            }
+        }
+    stages {
+        stage('Geting Vendure source') {
+            steps {
+                checkout scmGit(
+                    branches: [[name: 'main']],
+                    userRemoteConfigs: [[url: 'https://github.com/LT-Linas35/vendure-showcase.git']])
+            }
+        } 
+        stage('Populate Vendure DB') {
+            steps {
+                dir('vendure-source/packages/create') {
+                    sh 'npx $PWD populate-db --ci'
+                }
+            }
+        } 
+
+
+    }
+}

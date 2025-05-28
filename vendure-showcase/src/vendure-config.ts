@@ -47,6 +47,9 @@ export const config: VendureConfig = {
         logging: false,
         database: process.env.DB_NAME,
         schema: process.env.DB_SCHEMA,
+        ssl: process.env.DB_CA_CERT ? {
+          ca: process.env.DB_CA_CERT,
+        } : undefined,
         host: process.env.DB_HOST,
         port: +process.env.DB_PORT,
         username: process.env.DB_USERNAME,

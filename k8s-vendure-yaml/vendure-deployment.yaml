@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vendure-shop
+spec:
+  selector:
+    matchLabels:
+      app: vendure-shop
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: vendure-shop
+    spec:
+      containers:
+        - name: server
+          image: linas37/vendure-showcase:latest
+          command:
+            - node
+          args:
+            - "dist/index.js"
+          env:
+            - name: PORT
+              value: "3000"
+            - name: COOKIE_SECRET
+              value: "HvW6FEfJmVwO46uJhQiFXA"               
+            - name: DB_HOST
+              value: "vendure.cv6woyeie4gv.us-east-1.rds.amazonaws.com"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: "vendure"
+            - name: DB_USERNAME
+              value: "superadmin"
+            - name: DB_PASSWORD
+              value: "superadmin"
+            - name: DB_SCHEMA
+              value: "public"
+            - name: APP_ENV
+              value: "dev" 
+            - name: DB_CA_CERT
+              valueFrom:
+                configMapKeyRef:
+                  name: vendure-config
+                  key: DB_CA_CERT
+          ports:
+            - containerPort: 3000
+        - name: worker
+          image: linas37/vendure-showcase:latest
+          imagePullPolicy: Always
+          command:
+            - node
+          args:
+            - "dist/index-worker.js"
+          env:
+            - name: PORT
+              value: "3000"
+            - name: COOKIE_SECRET
+              value: "HvW6FEfJmVwO46uJhQiFXA"               
+            - name: DB_HOST
+              value: "vendure.cv6woyeie4gv.us-east-1.rds.amazonaws.com"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: "vendure"
+            - name: DB_USERNAME
+              value: "superadmin"
+            - name: DB_PASSWORD
+              value: "superadmin"
+            - name: DB_SCHEMA
+              value: "public"
+            - name: APP_ENV
+              value: "dev" 
+            - name: DB_CA_CERT
+              valueFrom:
+                configMapKeyRef:
+                  name: vendure-config
+                  key: DB_CA_CERT
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vendure-config
+data:
+  DB_CA_CERT: |-
+    -----BEGIN CERTIFICATE-----
+    MIID/jCCAuagAwIBAgIQTDc+UgTRtYO7ZGTQ8UWKDDANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UE
+    BhMCVVMxIjAgBgNVBAoMGUFtYXpvbiBXZWIgU2VydmljZXMsIEluYy4xEzARBgNVBAsMCkFtYXpv
+    biBSRFMxCzAJBgNVBAgMAldBMTAwLgYDVQQDDCdBbWF6b24gUkRTIGV1LXdlc3QtMiBSb290IENB
+    IFJTQTIwNDggRzExEDAOBgNVBAcMB1NlYXR0bGUwIBcNMjEwNTIxMjI0NjI0WhgPMjA2MTA1MjEy
+    MzQ2MjRaMIGXMQswCQYDVQQGEwJVUzEiMCAGA1UECgwZQW1hem9uIFdlYiBTZXJ2aWNlcywgSW5j
+    LjETMBEGA1UECwwKQW1hem9uIFJEUzELMAkGA1UECAwCV0ExMDAuBgNVBAMMJ0FtYXpvbiBSRFMg
+    ZXUtd2VzdC0yIFJvb3QgQ0EgUlNBMjA0OCBHMTEQMA4GA1UEBwwHU2VhdHRsZTCCASIwDQYJKoZI
+    hvcNAQEBBQADggEPADCCAQoCggEBAM1oGtthQ1YiVIC2i4u4swMAGxAjc/BZp0yq0eP5ZQFaxnxs
+    7zFAPabEWsrjeDzrRhdVO0h7zskrertPgblGhfD20JfjvCHdP1RUhy/nzG+T+hn6Takan/GIgs8g
+    rlBMRHMgBYHW7tklhjaH3F7LujhceAHhhgp6IOrpb6YTaTTaJbF3GTmkqxSJ3l1LtEoWz8Al/nL/
+    FtzxrtezVs6ebpvd7sw37sxmXBWX2OlvUrPCTmladw9OrllGXtCFw4YyLe3zozBlZ3cHzQ0qlINh
+    pRcajTMfZrsiGCkQtoJT+AqVJPS2sHjqsEH8yiySW9Jbq4zyMbM1yqQ2vnnxMJgoYMcCAwEAAaNC
+    MEAwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUaQG88UnVJPTI+Pcti1P+q3H7pGYwDgYDVR0P
+    AQH/BAQDAgGGMA0GCSqGSIb3DQEBCwUAA4IBAQBAkgr75V0sEJimC6QRiTVWEuj2Khy7unjSfudb
+    M6zumhXEU2/sUaVLiYy6cA/x3v0laDle6T07x9g64j5YastE/4jbzrGgIINFlY0JnaYmR3KZEjgi
+    1s1fkRRf3llLPJm9u4Q1mbwAMQK/ZjLuuRcL3uRIHJek18nRqT5h43GB26qXyvJqeYYpYfIjL9+/
+    YiZAbSRRZG+Li23cmPWrbA1CJY121SB+WybCbysbOXzhD3Sl2KSZRwSw4p2HrFtV1Prk0dOBtZxC
+    G9luf87ultuDZpfS0w6oNBAMXocgswk24ylcADkkFxBWW+7BETn1EpK+t1Lm37mU4sxtuha00XAi
+    -----END CERTIFICATE-----
