@@ -1,0 +1,39 @@
+  JCasC:
+    securityRealm: |
+      oic:
+        serverConfiguration:
+          wellKnown:
+            wellKnownOpenIDConfigurationUrl: "https://cognito-idp.eu-west-2.amazonaws.com/${var.cognito_user_pool_id}/.well-known/openid-configuration"
+            scopesOverride: openid profile email
+        clientId: ${var.jenkins_cognito_cliend_id}
+        clientSecret: ${var.jenkins_cognito_secret}
+        userNameField: "email"
+        fullNameFieldName: "name"
+        emailFieldName: "email"       
+
+    authorizationStrategy: |
+      globalMatrix:
+        permissions:
+          - "Overall/Administer:lincasm@gmail.com"
+
+    unclassified: |
+      vault:
+        configuration:
+          vaultUrl: "http://vault.vault.svc:8200"
+          engineVersion: 2
+          vaultAuth:
+            kubernetesAuth:
+              role: "jenkins"
+              mountPath: "auth/kubernetes"
+          failIfNotFound: false
+
+    jobs:
+      - script: |
+          multibranchPipelineJob('Vendre') {
+              branchSources {
+                  git {
+                      id = 'configuration-as-code'
+                      remote('https://github.com/LT-Linas35/vendure-showcase.git')
+                  }
+              }
+          }
