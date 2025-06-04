@@ -67,7 +67,7 @@ spec:
                 dir('vendure-showcase') {
                     sh 'npm install'
                     sh 'npm run build'
-                    sh 'npm run start:server'
+                    sh 'npm run populate'
                 }
             }
         } 
