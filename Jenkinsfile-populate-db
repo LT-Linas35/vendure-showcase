@@ -33,6 +33,7 @@ spec:
         stage('Populate Vendure DB') {
             steps {
                 dir('vendure-showcase') {
+                    sh 'npm install'
                     sh 'npm run build'
                     sh 'npm run start:server'
                 }

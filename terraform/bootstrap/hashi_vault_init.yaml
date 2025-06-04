@@ -1,0 +1,48 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: vault-init
+  namespace: vault
+spec:
+  template:
+    spec:
+      serviceAccountName: vault
+      containers:
+      - name: vault-init
+        image: alpine:latest
+        command:
+          - /bin/sh
+          - -c
+          - |
+            set -
+            wget https://releases.hashicorp.com/vault/1.19.5/vault_1.19.5_linux_amd64.zip
+            unzip vault_1.19.5_linux_amd64.zip
+            mv vault /usr/bin/
+            if vault status | grep -q 'Initialized.*true'; then
+              echo "Vault already initialized"
+              exit 0
+            fi
+            apk add jq
+            vault operator init -format=json > cluster-keys.json
+            CLUSTER_ROOT_TOKEN=$(cat cluster-keys.json | jq -r ".root_token")
+            vault login $CLUSTER_ROOT_TOKEN
+            vault auth enable kubernetes
+            vault write auth/kubernetes/config kubernetes_host="https://$KUBERNETES_PORT_443_TCP_ADDR:443"
+            vault policy write jenkins-policy - <<EOF                                   
+            path "secret/data/jenkins/*" {
+              capabilities = ["read", "list"]
+            }
+            path "secret/metadata/jenkins/*" {
+              capabilities = ["list"]
+            }
+            EOF
+            vault write auth/kubernetes/role/jenkins-role \                                            
+            bound_service_account_names=jenkins \
+            bound_service_account_namespaces=jenkins \
+            policies=jenkins-policy \
+            ttl=1h
+            echo "Vault initialized"
+        env:
+        - name: VAULT_ADDR
+          value: http://vault.vault.svc:8200
+      restartPolicy: Never

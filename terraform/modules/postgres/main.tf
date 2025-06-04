@@ -10,7 +10,7 @@ module "db" {
 
   db_name  = "vendure"
   username = "superadmin"
-  password = "superadmin"
+  password = "superadmin" # UZDEK VARIABLE KAD SECRET!!!
   port     = "5432"
 
   multi_az            = var.env == "prod" ? true : false

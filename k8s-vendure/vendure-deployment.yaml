@@ -11,11 +11,12 @@ spec:
     metadata:
       labels:
         app: vendure-shop
+      namespace: vendure-showcase
     spec:
       containers:
         - name: server
-          image: linas37/vendure-showcase:latest
-          imagePullPolicy: Always
+          image: 975050322104.dkr.ecr.eu-west-2.amazonaws.com/vendure-showcase:latest
+          imagePullPolicy: 
           resources:
             requests:
               cpu: "1000m"
@@ -31,7 +32,7 @@ spec:
             - name: COOKIE_SECRET
               value: "HvW6FEfJmVwO46uJhQiFXA"               
             - name: DB_HOST
-              value: "db.vendure.linasm.click"
+              value: "db.linasm.click"
             - name: DB_PORT
               value: "5432"
             - name: DB_NAME
@@ -73,7 +74,7 @@ spec:
             - name: COOKIE_SECRET
               value: "HvW6FEfJmVwO46uJhQiFXA"               
             - name: DB_HOST
-              value: "db.vendure.linasm.click"
+              value: "db.linasm.click"
             - name: DB_PORT
               value: "5432"
             - name: DB_NAME

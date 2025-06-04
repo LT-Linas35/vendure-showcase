@@ -8,6 +8,7 @@ pipeline {
 apiVersion: v1
 kind: Pod
 spec:
+  serviceAccountName: jenkins
   containers:
     - name: shell
       image: node:latest
@@ -43,23 +44,50 @@ spec:
         }
 
     stages {
-
         stage('Geting Vendure source') {
             steps {
                 checkout scmGit(
                     branches: [[name: 'main']],
                     userRemoteConfigs: [[url: 'https://github.com/LT-Linas35/vendure-showcase.git']])
             }
-        } 
-        stage('Installing dependencies') {
-            steps {
-              dir('vendure-source') {
-                sh 'npm install --production'
-                sh 'npm install lerna'
-                sh 'apt update && apt install -y buildah'
-            } 
-          }
-        } 
+        }
+        stage('Parallel tasks') {
+              parallel {
+                stage('Installing buildah') {
+                  steps {
+                    sh '''
+                    apt update && apt install -y buildah
+                    '''    
+                  }
+                }
+                stage('Installing AWS CLI') {
+                  steps {
+                    sh '''
+                    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+                    unzip awscliv2.zip
+                    ./aws/install                    
+                    '''    
+                  }
+                }
+                stage('Installing Lerna') {
+                  steps {
+                    sh '''
+                    npm install lerna                 
+                    '''    
+                  }
+                }
+                stage('Installing Vendure Dependencies') {
+                  steps {
+                      dir('vendure-source') {
+                        sh '''
+                        npm install --production
+                        '''
+                        } 
+                    }
+                }
+              }
+            }        
+        
         stage('Building Vendure packages') {
             steps {
               dir('vendure-source') {
@@ -70,7 +98,7 @@ spec:
 /*
         stage('Running Vendure tests') {
             steps {
-              dir('vendure') {
+              dir('vendure-source') {
                 sh 'npm run test'
             } 
           }
@@ -104,30 +132,25 @@ spec:
             }
           }
         } 
-        
-        stage('Login to Docker Hub') {
-            steps {
-                script {
-                  withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                      sh '''
-                          buildah login --username $DOCKER_USER --password $DOCKER_PASS docker.io
-                      '''
-                }
+        stage('Login to ECR Hub') {
+          steps {
+            script {
+              sh '''
+                aws ecr get-login-password --region eu-west-2 | buildah login --username AWS --password-stdin 975050322104.dkr.ecr.eu-west-2.amazonaws.com
+                '''
             }
+          }
         }
-        }
-
         stage('Build & Push') {
             steps {
                 dir('vendure-showcase') {
-                sh '''
+                    sh '''
                     npm install --production
                     npm run build
-                    buildah bud -t linas37/vendure-showcase:latest .
-                    buildah push linas37/vendure-showcase:latest
-                '''
+                    buildah bud -t 975050322104.dkr.ecr.eu-west-2.amazonaws.com/vendure-showcase:latest .
+                    buildah push 975050322104.dkr.ecr.eu-west-2.amazonaws.com/vendure-showcase:latest
+                    '''
                 }
-
             }
         }
     }

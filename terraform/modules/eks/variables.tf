@@ -21,3 +21,23 @@ variable "vpc_vpc_id" {
     type        = string
     default     = ""    
 }
+
+variable "AmazonEKSPodIdentityAmazonEBSCSIDriverRole" {
+    description = "ARN of the IAM role for the Amazon EBS CSI driver"
+    type        = string
+}
+
+variable "AWSLoadBalancerControllerIAMPolicy" {
+    description = "IAM policy for the AWS Load Balancer Controller"
+    type        = any
+    default     = {}  
+}
+
+variable "AllowExternalDNSUpdates" {
+    description = "IAM policy for allowing external DNS updates"
+    type        = any
+    default     = {}
+  
+}
+
+

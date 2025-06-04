@@ -40,7 +40,7 @@ locals {
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name                    = "Vendure-vpc"
+  name                    = "Vendure-vpc-${var.env}"
   cidr                    = "10.0.0.0/16"
   map_public_ip_on_launch = true
 

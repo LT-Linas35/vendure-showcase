@@ -1,8 +1,17 @@
+/*
+resource "aws_route53_zone" "dev" {
+  name = "vendure.linasm.click"
+
+  tags = {
+    Environment = "dev"
+  }
+}
+*/
+
 module "records" {
   source  = "terraform-aws-modules/route53/aws//modules/records"
   version = "~> 3.0"
 
-  zone_name = "linasm.click"
 
   records = [
 
@@ -15,6 +24,4 @@ module "records" {
       ]
     },
   ]
-
-  #  depends_on = [module.zones]
 }

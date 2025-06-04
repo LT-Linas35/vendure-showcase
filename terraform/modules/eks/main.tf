@@ -25,7 +25,7 @@ module "eks" {
     "eks-pod-identity-agent" = {}
     "kube-proxy"             = {}
     "vpc-cni"                = {}
-    "aws-ebs-csi-driver"     = {}
+#    "external-dns" = {}
   }
 
   create_node_security_group = false
@@ -45,14 +45,17 @@ module "eks" {
   }
 
   eks_managed_node_groups = {
-    example = {
+    data-planes = {
       # Starting on 1.30, AL2023 is the default AMI type for EKS managed node groups
       ami_type       = "AL2023_x86_64_STANDARD"
       instance_types = ["t2.medium"]
+      desired_size   = 4
+      min_size       = 1
+      max_size       = 4
+      iam_role_additional_policies = {
+        AWSLoadBalancerControllerIAMPolicy = var.AWSLoadBalancerControllerIAMPolicy
+      }
 
-      min_size     = 1
-      max_size     = 2
-      desired_size = 2
       labels = {
         # Used to ensure Karpenter runs on nodes that it does not manage
         "karpenter.sh/controller" = "true"
@@ -64,4 +67,16 @@ module "eks" {
     Terraform                = "true"
     "karpenter.sh/discovery" = "Vendure-Cluster"
   }
+}
+
+
+resource "aws_eks_addon" "aws_ebs_csi_driver" {
+  cluster_name                = module.eks.cluster_name
+  addon_name                  = "aws-ebs-csi-driver"
+  resolve_conflicts_on_update = "PRESERVE"
+  pod_identity_association {
+    service_account = "ebs-csi-controller-sa"
+    role_arn        = var.AmazonEKSPodIdentityAmazonEBSCSIDriverRole
+  }
+  depends_on = [ module.eks.cluster_addons ]
 }
