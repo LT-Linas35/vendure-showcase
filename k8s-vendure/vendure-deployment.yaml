@@ -48,7 +48,7 @@ spec:
             - name: synchronize
               value: "true"
             - name: HOST_NAME
-              value: "api.linasm.click"
+              value: "0.0.0.0"
             - name: DB_CA_CERT
               valueFrom:
                 configMapKeyRef:
@@ -90,7 +90,7 @@ spec:
             - name: synchronize
               value: "false"
             - name: HOST_NAME
-              value: "api.linasm.click"
+              value: "0.0.0.0"
             - name: DB_CA_CERT
               valueFrom:
                 configMapKeyRef:
