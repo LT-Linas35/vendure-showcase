@@ -7,17 +7,20 @@ module "db" {
   engine_version    = "17.4"
   instance_class    = "db.t4g.micro"
   allocated_storage = 5
+  
 
   db_name  = "vendure"
   username = "superadmin"
   password = "superadmin" # UZDEK VARIABLE KAD SECRET!!!
   port     = "5432"
+  manage_master_user_password = false
+  publicly_accessible = true
 
   multi_az            = var.env == "prod" ? true : false
   skip_final_snapshot = var.env == "dev" ? true : false
 
 
-  iam_database_authentication_enabled = true
+#  iam_database_authentication_enabled = true
 
   vpc_security_group_ids = [var.vpc_default_security_group_id]
 
@@ -47,7 +50,4 @@ module "db" {
 
   # Database Deletion Protection
   deletion_protection = var.env == "prod" ? true : false
-
-
-
 }

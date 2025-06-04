@@ -1,9 +1,0 @@
-{
-  "compilerOptions": {
-    "module": "nodenext",
-    "jsx": "react-jsx",
-    "paths": {
-      "@/graphql/*": ["../../../graphql/*"]
-    }
-  }
-}

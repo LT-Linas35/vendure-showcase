@@ -17,6 +17,38 @@ spec:
           cpu: "1000m"
         limits:
           cpu: "1"
+      env:
+        - name: PORT
+          value: "3000"
+        - name: COOKIE_SECRET
+          value: "HvW6FEfJmVwO46uJhQiFXA"               
+        - name: DB_HOST
+          value: "db.linasm.click"
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_NAME
+          value: "vendure"
+        - name: DB_USERNAME
+          value: "superadmin"
+        - name: DB_PASSWORD
+          value: "superadmin"
+        - name: DB_SCHEMA
+          value: "public"
+        - name: APP_ENV
+          value: "dev" 
+        - name: synchronize
+          value: "true"
+        - name: HOST_NAME
+          value: "0.0.0.0"
+        - name: SUPER_ADMIN
+          value: superadmin
+        - name: SUPERADMIN_PASSWORD
+          value: superadmin 
+        - name: DB_CA_CERT
+          valueFrom:
+            configMapKeyRef:
+              name: vendure-config
+              key: DB_CA_CERT
 '''
             defaultContainer 'shell'
             retries 2
