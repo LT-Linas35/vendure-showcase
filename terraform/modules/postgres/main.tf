@@ -7,20 +7,20 @@ module "db" {
   engine_version    = "17.4"
   instance_class    = "db.t4g.micro"
   allocated_storage = 5
-  
 
-  db_name  = "vendure"
-  username = "superadmin"
-  password = "superadmin" # UZDEK VARIABLE KAD SECRET!!!
-  port     = "5432"
+
+  db_name                     = "vendure"
+  username                    = "superadmin"
+  password                    = "superadmin" # UZDEK VARIABLE KAD SECRET!!!
+  port                        = "5432"
   manage_master_user_password = false
-  publicly_accessible = true
+  publicly_accessible         = true
 
   multi_az            = var.env == "prod" ? true : false
   skip_final_snapshot = var.env == "dev" ? true : false
 
 
-#  iam_database_authentication_enabled = true
+  #  iam_database_authentication_enabled = true
 
   vpc_security_group_ids = [var.vpc_default_security_group_id]
 
@@ -40,7 +40,7 @@ module "db" {
 
   # DB subnet group
   create_db_subnet_group = true
-  subnet_ids = slice(var.vpc_database_subnets,0,min(length(var.vpc_database_subnets), var.env == "prod" ? 3 : 2))
+  subnet_ids             = slice(var.vpc_database_subnets, 0, min(length(var.vpc_database_subnets), var.env == "prod" ? 3 : 2))
 
   # DB parameter group
   family = "postgres17"

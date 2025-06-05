@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "populate": "ts-node ./src/populate-test.ts",
+    "populate": "ts-node ./src/my-populate-script.ts",
+    "populate-test": "ts-node ./src/populate-test-data.ts",
     "build": "tsc"
 
   },

@@ -41,17 +41,17 @@ module "eks" {
 
   # EKS Managed Node Group(s)
   eks_managed_node_group_defaults = {
-    instance_types = ["t2.medium"]
+    instance_types = ["t2.xlarge"]
   }
 
   eks_managed_node_groups = {
     data-planes = {
       # Starting on 1.30, AL2023 is the default AMI type for EKS managed node groups
       ami_type       = "AL2023_x86_64_STANDARD"
-      instance_types = ["t2.medium"]
-      desired_size   = 4
+      instance_types = ["t2.xlarge"]
+      desired_size   = 1
       min_size       = 1
-      max_size       = 4
+      max_size       = 1
       iam_role_additional_policies = {
         AWSLoadBalancerControllerIAMPolicy = var.AWSLoadBalancerControllerIAMPolicy
       }
@@ -62,6 +62,7 @@ module "eks" {
       }
     }
   }
+  
   tags = {
     Environment              = var.env
     Terraform                = "true"

@@ -1,4 +1,8 @@
-import { VendureConfig } from '@vendure/core';
+import {
+    DefaultJobQueuePlugin,
+    VendureConfig,
+    dummyPaymentHandler,
+} from '@vendure/core';
 import 'dotenv/config';
 import path from 'path';
 
@@ -50,6 +54,7 @@ export const config: VendureConfig = {
     // When adding or altering custom field definitions, the database will
     // need to be updated. See the "Migrations" section in README.md.
     paymentOptions: {
-        paymentMethodHandlers: [],
+        paymentMethodHandlers: [dummyPaymentHandler],
     },
+    plugins: [DefaultJobQueuePlugin],
 };
