@@ -64,7 +64,7 @@ spec:
         } 
         stage('Populate Vendure DB') {
             steps {
-                dir('vendure-showcase') {
+                dir('vendure-populate-db') {
                     sh 'npm install'
                     sh 'npm run populate'
                 }
